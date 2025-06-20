@@ -1,2 +1,4 @@
 PyPDF2
 openai
+requests
+python-dotenv
