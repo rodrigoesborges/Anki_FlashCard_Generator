@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from src.Entity.flashcard import Flashcard
 from src.IService.flashcard_generator_interface import IFlashcardGeneratorService
 from src.IService.llm_service_interface import ILLMService
-from src.IService.pdf_reader_interface import IPDFReaderService
+from src.IService.pdf_reader_interface import IFileReaderService
 from src.Config.llm_config import LLMConfig
 from src.Utils.text_processor import TextProcessor
 
@@ -18,9 +18,9 @@ from src.Utils.text_processor import TextProcessor
 class FlashcardGeneratorService(IFlashcardGeneratorService):
     """플래시카드 생성 서비스"""
     
-    def __init__(self, llm_service: ILLMService, pdf_service: IPDFReaderService, config: LLMConfig):
+    def __init__(self, llm_service: ILLMService, file_service: IFileReaderService, config: LLMConfig):
         self.llm_service = llm_service
-        self.pdf_service = pdf_service
+        self.file_service = file_service
         self.config = config
         self.generated_cards: Set[str] = set()  # 중복 방지용
     
@@ -50,13 +50,13 @@ class FlashcardGeneratorService(IFlashcardGeneratorService):
         
         return valid_cards
     
-    def generate_cards_from_pdf(self, pdf_path: str, process_all: bool = False) -> List[Flashcard]:
-        """PDF 파일에서 플래시카드 생성"""
-        logging.info(f"PDF 처리 시작: {pdf_path}")
+    def generate_cards_from_pdf(self, file_path: str, process_all: bool = False) -> List[Flashcard]:
+        """파일에서 플래시카드 생성 (PDF, Markdown, Text 지원)"""
+        logging.info(f"파일 처리 시작: {file_path}")
         
-        # PDF 읽기
-        text, metadata = self.pdf_service.read_pdf(pdf_path)
-        logging.info(f"PDF 메타데이터: {metadata}")
+        # 파일 읽기
+        text, metadata = self.file_service.read_file(file_path)
+        logging.info(f"파일 메타데이터: {metadata}")
         
         # 텍스트 분할
         sections = TextProcessor.smart_divide_text(text)
