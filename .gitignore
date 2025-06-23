@@ -45,5 +45,6 @@ coverage.xml
 .mypy_cache/
 
 .claude/
-CLAUDE.md.env
-.env.example
+CLAUDE.md
+*.bak
+backup/
