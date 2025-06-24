@@ -36,4 +36,9 @@ class LLMConfig:
         
         # 플래시카드 생성 설정
         self.cards_per_section = int(os.getenv('CARDS_PER_SECTION', '5'))
-        self.min_card_quality = float(os.getenv('MIN_CARD_QUALITY', '0.7')) 
+        self.min_card_quality = float(os.getenv('MIN_CARD_QUALITY', '0.7'))
+        
+        # 커스텀 API 설정 (localhost:3284)
+        self.custom_api_base_url = os.getenv('CUSTOM_API_BASE_URL', 'http://localhost:3284')
+        self.custom_api_enabled = os.getenv('CUSTOM_API_ENABLED', 'true').lower() == 'true'
+        self.custom_api_timeout = int(os.getenv('CUSTOM_API_TIMEOUT', '30')) 
